@@ -11,7 +11,7 @@ def index(request):
 
 def about(request):
     context_dict = {'boldmessage':'ABOUT PAGE'}
-    return render(request, 'HD/index.html', context=context_dict)
+    return render(request, 'HD/about.html', context=context_dict)
 
 def submit_data(request):
     context_dict = {'boldmessage':'Data Submission'}
