@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE',
 import django
 django.setup()
 
-from HD.models import Worksheet
+from HD.models import Worksheet, Well
 
 def populate():
     # First, we will create lists of dictionaries containing the pages
@@ -22,29 +22,29 @@ def populate():
                         
                     ]
 
-    WS1234_wells =    [ {"well_name":"B01",},
+    WS1235_wells =    [ {"well_name":"B01",},
                         {"well_name":"B02",},
                         {"well_name":"B03",},
                         {"well_name":"B04",},
                         
                     ]
 
-    WS1234_wells =    [ {"well_name":"C01",},
+    WS1236_wells =    [ {"well_name":"C01",},
                         {"well_name":"C02",},
                         {"well_name":"C03",},
                         {"well_name":"C04",},
                         
                     ]
 
-    worksheets =    {"WS1234":
-                            {"ws_number":"WS1234",
-                             #"datetime":,
-                             "panel":"HD_PANEL",
-                             "size":"GS600",
-                             "analysis_type":"Fragment (Animal)",
-                             "software":"SoftGenetics GeneMarker 1.70",
-                             "wells":WS1234_wells
-                            },
+    worksheets =   {"WS1234":
+                        {"ws_number":"WS1234",
+                         #"datetime":,
+                         "panel":"HD_PANEL",
+                         "size":"GS600",
+                         "analysis_type":"Fragment (Animal)",
+                         "software":"SoftGenetics GeneMarker 1.70",
+                         "wells":WS1234_wells
+                        },
                      "WS1235":
                         {"ws_number":"WS1235",
                          #"datetime":,
@@ -63,18 +63,22 @@ def populate():
                          "software":"SoftGenetics GeneMarker 1.70",
                          "wells":WS1236_wells
                         },
-                    ]
+                    }
 
-
-    
-
-    for worksheet in worksheets:
-        add_worksheet(ws_number=worksheet["ws_number"],
-                      panel=worksheet["panel"],
-                      size=worksheet["size"],
-                      analysis_type=worksheet["analysis_type"],
-                      software=worksheet["software"],
+    for worksheet, worksheet_data in worksheets.items():
+        w = add_worksheet(ws_number=worksheet_data["ws_number"],
+                          panel=worksheet_data["panel"],
+                          size=worksheet_data["size"],
+                          analysis_type=worksheet_data["analysis_type"],
+                          software=worksheet_data["software"],
                      )
+        for well in worksheet_data["wells"]:
+            add_well(w, well["well_name"])
+
+    print "Added:"
+    for ws in Worksheet.objects.all():
+        for well in Well.objects.filter(worksheet=ws):
+            print("- {0} - {1}".format(str(ws), str(well)))
 
 def add_worksheet(ws_number, panel, size, analysis_type, software, datetime = None):
     w = Worksheet.objects.get_or_create(ws_number=ws_number)[0]
@@ -84,6 +88,13 @@ def add_worksheet(ws_number, panel, size, analysis_type, software, datetime = No
     w.software=software
     w.save()
     return w
+
+def add_well(worksheet, well_name):
+    w = Well.objects.get_or_create(worksheet=worksheet, well_name=well_name)[0]
+    w.save()
+    return w
+
+
     '''
     python_pages = [
                 {"title": "Official Python Tutorial",
@@ -126,9 +137,9 @@ def add_worksheet(ws_number, panel, size, analysis_type, software, datetime = No
 
     for cat, cat_data in cats.items():
         c = add_cat(cat)
-    for p in cat_data["pages"]:
-        add_page(c, p["title"], p["url"])
-    
+        for p in cat_data["pages"]:
+            add_page(c, p["title"], p["url"])
+        
 
     # Print out the categories we have added.
     for c in Category.objects.all():

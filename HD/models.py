@@ -19,13 +19,13 @@ class Worksheet(models.Model):
         return self.ws_number
 
 class Well(models.Model):
-    worksheet_id = models.ForeignKey(Worksheet)
+    worksheet = models.ForeignKey(Worksheet)
     well_name = models.CharField(max_length=8, null=False)
     #s_id = models.ForeignKey(Sample)
     #wn_id = models.ForeignKey(Well_name)
 
     def __str__(self): # For Python 2, use __unicode__ too
-        return self.name
+        return self.well_name
 
     def __unicode__(self):
-        return self.name
+        return self.well_name
