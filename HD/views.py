@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-from django.shortcuts import render
-
-from django.http import HttpResponse
-
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponse, HttpResponseRedirect
 from HD.models import Worksheet, Well, Fragment
+from django.template import RequestContext
+from django.core.urlresolvers import reverse
+
+from HD.models import Genemarker_data
+from HD.forms import Genemarker_dataForm  # Ugh, underscores and Camelback
+
 
 def index(request):
     context_dict = {'boldmessage':'INDEX PAGE'}
@@ -49,7 +52,7 @@ def show_worksheet(request, ws_number_slug):
 def show_well(request, well_name, ws_number_slug):
     context_dict = {}
     well_name = well_name.upper()
-    
+
     try:
         worksheet = Worksheet.objects.get(slug=ws_number_slug)
         well = Well.objects.get(well_name=well_name, worksheet=worksheet)
@@ -65,3 +68,19 @@ def show_well(request, well_name, ws_number_slug):
         context_dict["fragments"] = None
 
     return render(request, "HD/well.html", context_dict)
+
+def genemarker_upload(request):
+    # Upload
+    if request.method == "POST":
+        form = Genemarker_dataForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('datasub'))
+
+    else:
+        form = Genemarker_dataForm()
+
+    gm_files = Genemarker_data.objects.order_by('-upload_date')
+    context_dict = {"gm_files":gm_files,
+                    "form":form}
+    return render(request, 'HD/upload.html', context_dict)

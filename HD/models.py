@@ -79,8 +79,9 @@ class Fragment(models.Model):
     def __unicode__(self):
         return "%s (%s)" % (str(self.size), str(self.allele))
 
-class GeneMarker_xls_export(models.Model):
-    xls_file = models.FileField(upload_to='xls_files/%Y%m%d')
+class Genemarker_data(models.Model):
+    gm_file = models.FileField(upload_to='gm_files/%Y%m%d')
+    upload_date = models.DateTimeField(auto_now_add =True)
 
     def __str__(self): # For Python 2, use __unicode__ too
         return str(self.xls_file)
