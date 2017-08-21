@@ -18,14 +18,52 @@ class Worksheet(models.Model):
     def __unicode__(self):
         return self.ws_number
 
-class Well(models.Model):
-    worksheet = models.ForeignKey(Worksheet)
-    well_name = models.CharField(max_length=8, null=False)
-    #s_id = models.ForeignKey(Sample)
-    #wn_id = models.ForeignKey(Well_name)
+class Sample(models.Model):
+    sample_number = models.CharField(max_length=12, null=False, unique=True)
 
     def __str__(self): # For Python 2, use __unicode__ too
-        return self.well_name
+        return self.sample_number
 
     def __unicode__(self):
-        return self.well_name
+        return self.sample_number
+
+class Well(models.Model):
+    worksheet = models.ForeignKey(Worksheet)
+    sample = models.ForeignKey(Sample)
+    well_name = models.CharField(max_length=8, null=False)
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return str(self.worksheet) + " - " + self.well_name
+
+    def __unicode__(self):
+        return str(self.worksheet) + " - " + self.well_name
+
+
+class Allele(models.Model):
+    repeats = models.IntegerField(null=False)
+    #min_size = models.FloatField()
+    #max_size = models.FloatField()
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return str(self.repeats)
+
+    def __unicode__(self):
+        return str(self.repeats)
+
+
+class Fragment(models.Model):
+    well = models.ForeignKey(Well)
+    allele = models.ForeignKey(Allele)
+    dye = models.CharField(max_length=8, null=False)
+    size = models.FloatField(null=False)
+    height = models.IntegerField(null=False)
+    area = models.IntegerField(null=False)
+    qual = models.CharField(max_length=8, null=False)
+    score = models.IntegerField(null=False)
+    comments = models.CharField(max_length=256, null=False)
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return "%s (%s)" % (str(self.size), str(self.allele))
+
+    def __unicode__(self):
+        return "%s (%s)" % (str(self.size), str(self.allele))

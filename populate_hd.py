@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE',
 import django
 django.setup()
 
-from HD.models import Worksheet, Well
+from HD.models import Worksheet, Well, Sample, Fragment, Allele
 
 def populate():
     # First, we will create lists of dictionaries containing the pages
@@ -15,24 +15,97 @@ def populate():
     # This might seem a little bit confusing, but it allows us to iterate
     # through each data structure, and add the data to our models.
     
-    WS1234_wells =    [ {"well_name":"A01",},
-                        {"well_name":"A02",},
-                        {"well_name":"A03",},
-                        {"well_name":"A04",},
+    '''
+    alleles = [{"repeats":10,
+                "min_length":29.0,
+                "max_length":31.0},
+                {"repeats":11,
+                "min_length":32.0,
+                "max_length":34.0}
+                {"repeats":12,
+                "min_length":35.0,
+                "max_length":37.0}
+                ]
+    '''
+
+    fragments1          = [{"dye":"Blue",
+                            "size":84.4,
+                            "height":4492,
+                            "area":24718,
+                            "qual":"Pass",
+                            "score":500,
+                            "comments":"This is a comment 1",
+                            "allele":18},
+                            {"dye":"Blue",
+                            "size":84.5,
+                            "height":4493,
+                            "area":24719,
+                            "qual":"Pass",
+                            "score":501,
+                            "comments":"This is a comment 2",
+                            "allele":18},
+                            ]
+    
+    fragments2          = [{"dye":"Blue",
+                            "size":84.6,
+                            "height":4494,
+                            "area":24720,
+                            "qual":"Pass",
+                            "score":502,
+                            "comments":"This is a comment 3",
+                            "allele":18},
+                            {"dye":"Blue",
+                            "size":84.7,
+                            "height":4495,
+                            "area":24721,
+                            "qual":"Pass",
+                            "score":503,
+                            "comments":"This is a comment 4",
+                            "allele":18},
+                            ]
+
+    WS1234_wells =    [ {"well_name":"A01",
+                         "sample_number":"GM17.00001",
+                         "fragments":fragments1},
+                        {"well_name":"A02",
+                         "sample_number":"GM17.00002",
+                         "fragments":fragments2},
+                        {"well_name":"A03",
+                        "sample_number":"GM17.00003",
+                         "fragments":fragments1},
+                        {"well_name":"A04",
+                        "sample_number":"GM17.00004",
+                         "fragments":fragments2},
                         
                     ]
 
-    WS1235_wells =    [ {"well_name":"B01",},
-                        {"well_name":"B02",},
-                        {"well_name":"B03",},
-                        {"well_name":"B04",},
+    WS1235_wells =    [ {"well_name":"B01",
+                         "sample_number":"GM17.00005",
+                         "fragments":fragments1},
+                        {"well_name":"B02",
+                         "sample_number":"GM17.00006",
+                         "fragments":fragments2},
+                        {"well_name":"B03",
+                         "sample_number":"GM17.00007",
+                         "fragments":fragments1},
+                        {"well_name":"B04",
+                         "sample_number":"GM17.00008",
+                         "fragments":fragments2},
                         
                     ]
 
-    WS1236_wells =    [ {"well_name":"C01",},
-                        {"well_name":"C02",},
-                        {"well_name":"C03",},
-                        {"well_name":"C04",},
+    WS1236_wells =    [ {"well_name":"A01",
+                         "sample_number":"GM17.00009",
+                         "fragments":fragments1},
+                        {"well_name":"A02",
+                         "sample_number":"GM17.00010",
+                         "fragments":fragments2},
+                        {"well_name":"A03",
+                         "sample_number":"GM17.00001",
+                         "fragments":fragments1},
+                        {"well_name":"A04",
+                         "sample_number":"GM17.00011",
+                         "fragments":fragments2},
                         
                     ]
 
@@ -66,21 +139,36 @@ def populate():
                     }
 
     for worksheet, worksheet_data in worksheets.items():
-        w = add_worksheet(ws_number=worksheet_data["ws_number"],
+        ws = add_worksheet(ws_number=worksheet_data["ws_number"],
                           panel=worksheet_data["panel"],
                           size=worksheet_data["size"],
                           analysis_type=worksheet_data["analysis_type"],
                           software=worksheet_data["software"],
                      )
         for well in worksheet_data["wells"]:
-            add_well(w, well["well_name"])
+            s = add_sample(well["sample_number"])
+            w = add_well(ws, well["well_name"], s)
+            for fragment in well["fragments"]:
+                a = add_allele(fragment["allele"])
+                f = add_fragment(well=w,
+                                 dye=fragment["dye"],
+                                 size=fragment["size"],
+                                 height=fragment["height"],
+                                 area=fragment["area"],
+                                 qual=fragment["qual"],
+                                 score=fragment["score"],
+                                 comments=fragment["comments"],
+                                 allele=a)
 
     print "Added:"
     for ws in Worksheet.objects.all():
         for well in Well.objects.filter(worksheet=ws):
-            print("- {0} - {1}".format(str(ws), str(well)))
+            print "Well:", str(well)
+            for fragment in Fragment.objects.filter(well=well):
+                print fragment
 
-def add_worksheet(ws_number, panel, size, analysis_type, software, datetime = None):
+
+def add_worksheet(ws_number, panel, size, analysis_type, software, datetime=None):
     w = Worksheet.objects.get_or_create(ws_number=ws_number)[0]
     w.panel=panel
     w.size=size
@@ -89,10 +177,29 @@ def add_worksheet(ws_number, panel, size, analysis_type, software, datetime = No
     w.save()
     return w
 
-def add_well(worksheet, well_name):
-    w = Well.objects.get_or_create(worksheet=worksheet, well_name=well_name)[0]
+
+def add_well(worksheet, well_name, sample):
+    w = Well.objects.get_or_create(worksheet=worksheet, well_name=well_name, sample=sample)[0]
     w.save()
     return w
+
+
+def add_sample(sample):
+    s = Sample.objects.get_or_create(sample_number=sample)[0]
+    s.save()
+    return s
+
+
+def add_allele(repeats):
+    a = Allele.objects.get_or_create(repeats=repeats)[0]
+    a.save()
+    return a
+
+def add_fragment(well, dye, size, height, area, qual, score, comments, allele):
+    f = Fragment.objects.get_or_create(well=well, size=size, dye=dye, height=height, area=area, qual=qual, score=score, comments=comments, allele=allele)[0]
+    f.save()
+    return f
+
 
 
     '''
@@ -161,5 +268,5 @@ def add_cat(name):
 '''
 # Start execution here!
 if __name__ == '__main__':
-    print("Starting Rango population script...")
+    print("Starting Fragment population script...")
     populate()
