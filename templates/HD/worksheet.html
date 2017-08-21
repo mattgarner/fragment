@@ -14,7 +14,7 @@
             <ul>
             {% for well in wells %}
                 <li>
-                <a href="/hd/worksheet/{{worksheet.slug}}/{{well.well_name}}">{{ well.well_name }}</a>
+                <a href="/hd/worksheet/{{worksheet.slug}}/{{well.well_name}}">{{ well.well_name }} {{ well.sample }}</a>
                 </li>                
             {% endfor %}
         {% else %}
