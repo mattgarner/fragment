@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.template.defaultfilters import slugify
 
 class Worksheet(models.Model):
     ws_number = models.CharField(max_length=16, unique=True, null=False)
@@ -11,6 +12,11 @@ class Worksheet(models.Model):
     size = models.CharField(max_length=16, unique=False, null=False)
     analysis_type = models.CharField(max_length=32, unique=False, null=False)
     software = models.CharField(max_length=128, unique=False, null=False)
+    slug = models.SlugField(unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.ws_number)
+        super(Worksheet, self).save(*args, **kwargs)
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.ws_number
@@ -31,6 +37,11 @@ class Well(models.Model):
     worksheet = models.ForeignKey(Worksheet)
     sample = models.ForeignKey(Sample)
     well_name = models.CharField(max_length=8, null=False)
+    #slug = models.SlugField()
+
+    #def save(self, *args, **kwargs):
+    #    self.slug = slugify(self.well_name)
+    #    super(Well, self).save(*args, **kwargs)
 
     def __str__(self): # For Python 2, use __unicode__ too
         return str(self.worksheet) + " - " + self.well_name
@@ -67,3 +78,12 @@ class Fragment(models.Model):
 
     def __unicode__(self):
         return "%s (%s)" % (str(self.size), str(self.allele))
+
+class GeneMarker_xls_export(models.Model):
+    xls_file = models.FileField(upload_to='xls_files/%Y%m%d')
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return str(self.xls_file)
+
+    def __unicode__(self):
+        return str(self.xls_file)

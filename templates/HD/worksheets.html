@@ -7,11 +7,20 @@
     <title>HD</title>
 </head>
 <body>
-    <h1>Header</h1>
+    <h1>Worksheets</h1>
     <div>
-        Text <br />
-        <strong>{{ boldmessage }}</strong><br />
-    </div>
+        {% if worksheets %}
+            <ul>
+            {% for worksheet in worksheets %}
+                <li>
+                <a href="/hd/worksheet/{{worksheet.slug}}">{{ worksheet.ws_number }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <strong>No Worksheets found!</strong>
+        {% endif %}
+    </div><br/>
     <div>
         <a href=/hd/about/>About</a><br />
         <a href=/hd/datasub/>Submit Data</a><br/>

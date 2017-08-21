@@ -7,11 +7,23 @@
     <title>HD</title>
 </head>
 <body>
-    <h1>Header</h1>
+    
     <div>
-        Text <br />
-        <strong>{{ boldmessage }}</strong><br />
-    </div>
+        {% if worksheet %}
+            <h1>{{worksheet.ws_number}}</h1>
+            <ul>
+            {% for well in wells %}
+                <li>
+                <a href="/hd/worksheet/{{worksheet.slug}}/{{well.well_name}}">{{ well.well_name }}</a>
+                </li>                
+            {% endfor %}
+        {% else %}
+            <strong>Worksheet not found!</strong>
+        {% endif %}    
+            
+            </ul>
+        
+    </div><br/>
     <div>
         <a href=/hd/about/>About</a><br />
         <a href=/hd/datasub/>Submit Data</a><br/>

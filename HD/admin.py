@@ -5,11 +5,15 @@ from django.contrib import admin
 from HD.models import Worksheet, Well, Sample, Fragment, Allele
 
 # Register your models here.
-admin.site.register(Worksheet)
 admin.site.register(Sample)
 admin.site.register(Allele)
 
 # Display non-default fields in admin view
+class WorksheetAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug":('ws_number',)}
+
+admin.site.register(Worksheet, WorksheetAdmin)
+
 class WellAdmin(admin.ModelAdmin):
     list_display = ('well_name','worksheet','sample')
 
