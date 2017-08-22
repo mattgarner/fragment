@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-
+{% extends 'HD/base_boot-strap.html' %}
 {% load staticfiles %}
 
-<html>
-<head>
-    <title>HD</title>
-</head>
-<body>
+
+{% block titleblock %}
+    Worksheets
+{% endblock %}
+
+{% block bodyblock %}
     <h1>Worksheets</h1>
     <div>
         {% if worksheets %}
@@ -21,13 +22,4 @@
             <strong>No Worksheets found!</strong>
         {% endif %}
     </div><br/>
-    <div>
-        <a href=/hd/about/>About</a><br />
-        <a href=/hd/datasub/>Submit Data</a><br/>
-        <a href=/hd/dataview/>View Data</a><br/>
-        <a href=/hd/worksheets/>Browse Data</a><br/>
-        <h4>Image</h4><br/>
-        <img src="{% static 'images/huntingtin.png' %}" alt="Picture of huntingtin" height=200 width=250 /><br/>
-    </div>
-</body>
-</html>
+{% endblock %}

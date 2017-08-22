@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+<html>
+    
+    <head lang="en">
+        <meta charset="utf-8" />
+        <title>
+            {% block titleblock %}
+                <h1>Default Title</h1>
+            {% endblock %}
+        </title>
+    </head>
+    
+    <body>
+        <div>
+            {% block bodyblock %}
+            Default Body
+            {% endblock %}
+        </div>
+        <hr />
+        <div>
+            <a href=/hd/>Home</a><br />
+            <a href=/hd/about/>About</a><br />
+            <a href=/hd/datasub/>Submit Data</a><br/>
+            <!-- <a href=/hd/dataview/>View Data</a><br/> -->
+            <a href=/hd/worksheets/>Browse Data</a><br/>
+            <br />
+            <img src="{% static 'images/huntingtin.png' %}" alt="Picture of huntingtin" height=200 width=250 /><br/>
+        </div>
+    </body>
+</html>

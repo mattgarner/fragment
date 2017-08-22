@@ -21,6 +21,7 @@ from HD import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    #url(r'^about/$', views.about, name='about'),
     url(r'^hd/', include('HD.urls')),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

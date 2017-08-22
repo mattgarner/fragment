@@ -1,39 +1,32 @@
-<!DOCTYPE html>
-
+{% extends 'HD/base.html' %}
 {% load staticfiles %}
 
-<html>
-    <head>
-        <title>Upload</title>   
-    </head>
-    <body>
+
+{% block titleblock %}
+    Upload
+{% endblock %}
+
+{% block bodyblock %}
+    <h2>Genemarker data upload</h2>
     <!-- List of uploaded documents -->
-            <!-- Upload form. Note enctype attribute! -->
-        <div>
-            <form action="#" method="post" enctype="multipart/form-data">
-                {% csrf_token %} {{form}}
-                <p><input type="submit" value="Upload" /></p>
-            </form>
-        </div>
-        <div>
-            {% if gm_files %}
-            <h3>Previous Uploads:</h3>
-                <ul>
-                {% for document in gm_files %}
-                    <li><a href="{{ document.gm_file.url }}">{{ document.gm_file.name }}</a></li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No documents.</p>
-            {% endif %}
-        </div>
-        <div>
-            <a href=/hd/about/>About</a><br />
-            <a href=/hd/datasub/>Submit Data</a><br/>
-            <a href=/hd/dataview/>View Data</a><br/>
-            <a href=/hd/worksheets/>Browse Data</a><br/>
-            <h4>Image</h4><br/>
-            <img src="{% static 'images/huntingtin.png' %}" alt="Picture of huntingtin" height=200 width=250 /><br/>
-        </div>
-    </body>
-</html> 
+        <!-- Upload form. Note enctype attribute! -->
+    <div>
+        <form action="#" method="post" enctype="multipart/form-data">
+            {% csrf_token %} {{form}}
+            <p><input type="submit" value="Upload" /></p>
+        </form>
+    </div>
+    <div>
+        {% if gm_files %}
+        <h3>Previous Uploads:</h3>
+            <ul>
+            {% for document in gm_files %}
+                <li><a href="{{ document.gm_file.url }}">{{ document.gm_file.name }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No previous uploads.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

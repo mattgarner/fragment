@@ -1,32 +1,24 @@
-<!DOCTYPE html>
-
+{% extends 'HD/base.html' %}
 {% load staticfiles %}
 
-<html>
-<head>
-    <title>HD</title>
-</head>
-<body>
 
+{% block titleblock %}
+    Home
+{% endblock %}
+    
+{% block bodyblock %}
     <div>
         {% if worksheet and well %}
             <h1>{{worksheet.ws_number}} {{well.well_name}}</h1>
+            <h3>Fragment Sizes</h3>
             <ul>
             {% for fragment in fragments %}
-                <li>{{fragment.size}}</li>
+                <li>{{fragment.allele}} {{fragment.size}} {{fragment.dye}}</li>
             {% endfor %}
             </ul>
         {% else %}
             <strong>Not found!</strong>
         {% endif %}
     </div><br/>
-    <div>
-        <a href=/hd/about/>About</a><br />
-        <a href=/hd/datasub/>Submit Data</a><br/>
-        <a href=/hd/dataview/>View Data</a><br/>
-        <a href=/hd/worksheets/>Browse Data</a><br/>
-        <h4>Image</h4><br/>
-        <img src="{% static 'images/huntingtin.png' %}" alt="Picture of huntingtin" height=200 width=250 /><br/>
-    </div>
-</body>
-</html>
+
+{% endblock %}

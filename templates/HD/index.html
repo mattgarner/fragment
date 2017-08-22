@@ -1,20 +1,11 @@
-<!DOCTYPE html>
-
+{% extends 'HD/base_boot-strap.html' %}
 {% load staticfiles %}
 
-<html>
-<head>
-    <title>HD</title>
-</head>
-<body>
-    <h1>HD Fragment Sizes</h1>
-    <div>
-        <a href=/hd/about/>About</a><br />
-        <a href=/hd/datasub/>Submit Data</a><br/>
-        <a href=/hd/dataview/>View Data</a><br/>
-        <a href=/hd/worksheets/>Browse Data</a><br/>
-        <br />
-        <img src="{% static 'images/huntingtin.png' %}" alt="Picture of huntingtin" height=200 width=250 /><br/>
-    </div>
-</body>
-</html>
+
+{% block titleblock %}
+    Home
+{% endblock %}
+
+{% block bodyblock %}
+    <h2>HD Fragment Sizes</h2>
+{% endblock %}

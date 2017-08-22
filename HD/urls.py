@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from HD import views
 
+app_name = "hd"
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^about/$', views.about, name='about'),
@@ -11,3 +12,4 @@ urlpatterns = [
     url(r'^worksheet/(?P<ws_number_slug>[\w\-]+)$', views.show_worksheet, name='show_worksheet'),
     url(r'^worksheet/(?P<ws_number_slug>[\w\-]+)/(?P<well_name>[\w\-]+)$', views.show_well, name='show_well'),
             ]
+
