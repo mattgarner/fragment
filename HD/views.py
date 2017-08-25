@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 
 from HD.models import Genemarker_data
 from HD.forms import Genemarker_dataForm  # Ugh, underscores and Camelback
-
+import json
 
 def index(request):
     context_dict = {'boldmessage':'INDEX PAGE'}
@@ -84,3 +84,48 @@ def genemarker_upload(request):
     context_dict = {"gm_files":gm_files,
                     "form":form}
     return render(request, 'HD/upload.html', context_dict)
+
+from graphos.sources.model import ModelDataSource
+from graphos.renderers import flot, gchart
+
+def fplot(request):
+    
+    queryset = Fragment.objects.all()
+    data_source = ModelDataSource(queryset,
+                                  fields=['size', 'area', 'height'])
+    line_fchart = flot.LineChart(data_source,
+                                  options={'title': "Test Title"})
+    #column_chart = self.renderer.ColumnChart(simple_data_source,
+    #                                  options={'title': "Sales/ Expense"})
+    #bar_chart = self.renderer.BarChart(data_source,
+    #                            options={'title': "Expense Growth"})
+    #pie_chart = self.renderer.PieChart(data_source)
+
+    context_dict = {
+            "fchart": line_fchart,
+            #"column_chart": column_chart,
+            #'bar_chart': bar_chart,
+            #'pie_chart': pie_chart,
+            }
+
+    return render(request, "HD/fplot.html", context_dict)
+
+from graphos.sources.simple import SimpleDataSource
+from graphos.renderers.gchart import LineChart
+
+def gplot(request):
+
+    queryset = Fragment.objects.all()
+    data_source = ModelDataSource(queryset,
+                                  fields=['size', 'area', 'height'])
+    line_gchart = gchart.LineChart(data_source,
+                                  options={'title': "Test Title"})
+
+    context_dict = {
+            "gchart": line_gchart,
+            #"column_chart": column_chart,
+            #'bar_chart': bar_chart,
+            #'pie_chart': pie_chart,
+            }
+
+    return render(request, "HD/fplot.html", context_dict)

@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^wells/$', views.well_list, name='well_list'),
     url(r'^worksheet/(?P<ws_number_slug>[\w\-]+)$', views.show_worksheet, name='show_worksheet'),
     url(r'^worksheet/(?P<ws_number_slug>[\w\-]+)/(?P<well_name>[\w\-]+)$', views.show_well, name='show_well'),
+    url(r'^fplot/$', views.fplot, name='fplot'),
+    url(r'^gplot/$', views.gplot, name='gplot'),
             ]
 
